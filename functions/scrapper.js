@@ -5,11 +5,13 @@ const { URL_MISSING_CHILDREN } = require('../utils/constants');
 
 module.exports.handler = async (event) => {
   const url = URL_MISSING_CHILDREN;
-  const data = await Scrapper(url);
+  const html = await Scrapper(url);
 
-  if (!data) return;
+  if (!html) return;
 
-  MissingChildrenParser(data);
+  const data = await MissingChildrenParser(html);
+
+  console.log(data);
 
   // return {
   //   statusCode: 200,
