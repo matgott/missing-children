@@ -28,10 +28,27 @@ provider:
 
 functions:
   scrapper:
+    timeout: 15
     handler: dist/functions/scrapper.handler
+    events:
+      - schedule: rate(7 days)
+  getMissingChildren:
+    handler: dist/functions/getMissingChildren.handler
+    events:
+      - httpApi:
+          method: 'GET'
+          path: /getMissingChildren/{nextKey?}
+          request:
+            parameters:
+              paths:
+                nextKey: false
+          cors: true
 
 package:
   include:
     - dist/**
   exclude:
     - src/**
+
+plugins:
+  - serverless-offline
