@@ -28,4 +28,10 @@ provider:
 
 functions:
   scrapper:
-    handler: functions/scrapper.handler
+    handler: dist/functions/scrapper.handler
+
+package:
+  include:
+    - dist/**
+  exclude:
+    - src/**

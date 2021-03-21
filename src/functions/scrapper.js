@@ -15,5 +15,5 @@ module.exports.handler = async (event) => {
 
   const data = await MissingChildrenParser(html);
 
-  SaveToDynamo(data, process.env.DYNAMODB_TABLE_MISSING_CHILDREN);
+  await SaveToDynamo(data, process.env.DYNAMODB_TABLE_MISSING_CHILDREN);
 };
