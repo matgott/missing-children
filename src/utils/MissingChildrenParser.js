@@ -8,15 +8,14 @@ const dataScraper = async (url) => {
   Info(`Scrapping ${url}`);
   try {
     const data = await Scrapper(url);
-    url = new URL(url);
+
+    const id = Number(new URL(url).searchParams.get('id'));
 
     if (!data) return null;
 
     const $ = cheerio.load(data);
 
-    const name = $('#table7 > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1)')
-      .text()
-      .trim();
+    let name = $('#table7 > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1)').text().trim();
     const since = $('#table7 > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(1)')
       .text()
       .trim();
@@ -32,9 +31,9 @@ const dataScraper = async (url) => {
         .trim()
         .split(' ')[0]
     );
-    const birthPlace = $(
-      '#table7 > tbody:nth-child(1) > tr:nth-child(9) > td:nth-child(1)'
-    )?.innerHTML?.trim();
+    const birthday = $('#table7 > tbody:nth-child(1) > tr:nth-child(9) > td:nth-child(1)')
+      ?.html()
+      .trim();
     const residencePlace = $('#table7 > tbody:nth-child(1) > tr:nth-child(12) > td:nth-child(1)')
       .text()
       .trim();
@@ -42,17 +41,22 @@ const dataScraper = async (url) => {
       '#table5 > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > img:nth-child(1)'
     ).attr('src');
 
+    const finded = name.toLowerCase().indexOf('fue encontrad') >= 0;
+    name = name.split(' FUE')[0];
+
     const pictureData = URL_ROOT + picturePath; //picturePath ? await ImageUrlToBase64(URL_ROOT + picturePath) : undefined;
 
     return {
-      id: Number(url.searchParams.get('id')),
+      id,
       name,
       since,
       pictureAge,
       currentAge,
-      birthPlace: birthPlace || '',
+      birthday,
       residencePlace,
       pictureUrl: pictureData,
+      finded,
+      url,
     };
   } catch (error) {
     Error(`Error scrapping Missing Children ${url}: ${JSON.stringify(error)}`);
