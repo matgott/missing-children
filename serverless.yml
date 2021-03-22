@@ -10,6 +10,8 @@ provider:
   stage: dev
   environment:
     DYNAMODB_TABLE_MISSING_CHILDREN: missing_children
+  httpApi:
+    cors: true
   iam:
     role:
       statements:
@@ -37,12 +39,10 @@ functions:
     events:
       - httpApi:
           method: 'GET'
-          path: /getMissingChildren/{nextKey?}
-          request:
-            parameters:
-              paths:
-                nextKey: false
-          cors: true
+          path: /getMissingChildren
+      - httpApi:
+          method: 'GET'
+          path: /getMissingChildren/{nextKey}
 
 package:
   include:
